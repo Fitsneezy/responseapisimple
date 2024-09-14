@@ -8,17 +8,41 @@
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
+            margin: 20px;
         }
         p {
             margin: 10px 0;
         }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
+    <h1>API Documentation</h1>
     <p>This site is designed to only be used by APIs.</p>
     <p>You can reference it using:</p>
     <p><a href="https://fitsneezy.github.io/responseapisimple">https://fitsneezy.github.io/responseapisimple</a></p>
     <p>in your code.</p>
+    
+    <h2>Example Code</h2>
+    <p>Here is an example of how to use the API:</p>
+    <pre><code>
+const apiUrl = 'https://fitsneezy.github.io/responseapisimple';
+
+fetch(apiUrl)
+    .then(response =&gt; response.json())
+    .then(data =&gt; {
+        console.log('API Response:', data);
+    })
+    .catch(error =&gt; {
+        console.error('Error:', error);
+    });
+    </code></pre>
+    
+    <h2>Current Time</h2>
     <p id="last-update">Current time: Loading...</p>
 
     <script>
