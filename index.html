@@ -5,22 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple API</title>
     <script>
+        // Dictionary of words and their definitions
         const definitions = {
             "PlayStation 5": "PlayStation 5 is a home video game console developed by Sony Interactive Entertainment, released in 2020.",
             "Xbox Series X": "Xbox Series X is a home video game console developed by Microsoft, released in 2020.",
             "Windows 11": "Windows 11 is an operating system developed by Microsoft, released in 2021.",
-            // Add more definitions here
+            // Add more definitions here...
         };
 
+        // Get the current timestamp
+        const lastUpdate = new Date().toISOString();
+
+        // Display the last update time in the HTML
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('last-update').textContent = "Last update: " + lastUpdate;
+        });
+
+        // Handle API requests
         function handleRequest(req) {
             const urlParams = new URLSearchParams(req.url.split('?')[1]);
             const word = urlParams.get('word');
             const definition = definitions[word] || "Definition not found.";
-            return new Response(JSON.stringify({ word, definition }), {
+            return new Response(JSON.stringify({ 
+                word, 
+                definition,
+                lastUpdate 
+            }), {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
 
+        // Listen for fetch events and respond to API requests
         self.addEventListener('fetch', (event) => {
             if (event.request.url.includes('/api')) {
                 event.respondWith(handleRequest(event.request));
@@ -33,5 +48,8 @@
     <p>You can reference it using:</p>
     <p>https://fitsneezy.github.io/responseapisimple/api?word=PlayStation%205</p>
     <p>in your code.</p>
+    
+    <!-- Timestamp for last update -->
+    <p id="last-update">Last update: </p>
 </body>
 </html>
