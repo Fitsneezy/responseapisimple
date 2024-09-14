@@ -3,70 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Documentation</title>
+    <title>API Example</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            line-height: 1.6;
             margin: 20px;
-        }
-        p {
-            margin: 10px 0;
         }
         pre {
             background-color: #f4f4f4;
             padding: 10px;
             border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: monospace;
+        }
+        #api-response {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        #last-update {
+            font-size: 0.9em;
+            color: #555;
         }
     </style>
 </head>
 <body>
-    <h1>API Documentation</h1>
+    <h1>API Example</h1>
     <p>This site is designed to only be used by APIs.</p>
     <p>You can reference it using:</p>
-    <p><a href="https://fitsneezy.github.io/responseapisimple">https://fitsneezy.github.io/responseapisimple</a></p>
+    <p><a href="https://fitsneezy.github.io/responseapisimple/api">https://fitsneezy.github.io/responseapisimple/api</a></p>
     <p>in your code.</p>
-    
+
+    <div id="api-response">Fetching API data...</div>
+    <div id="last-update">Last update: <span id="timestamp">Loading...</span></div>
+
     <h2>Example Code</h2>
-    <p>Here is an example of how to use the API:</p>
+    <h3>Python:</h3>
     <pre><code>
-const apiUrl = 'https://fitsneezy.github.io/responseapisimple';
+import tkinter as tk
+import requests
+from datetime import datetime
 
-fetch(apiUrl)
-    .then(response =&gt; response.json())
-    .then(data =&gt; {
-        console.log('API Response:', data);
-    })
-    .catch(error =&gt; {
-        console.error('Error:', error);
-    });
+def fetch_data():
+    try:
+        response = requests.get('https://fitsneezy.github.io/responseapisimple/api')
+        response.raise_for_status()
+        data = response.json()
+        message = data.get('message', 'No message found.')
+        api_response_label.config(text=f"API Response: {message}")
+    except requests.RequestException as e:
+        api_response_label.config(text=f"Error fetching data: {e}")
+
+def update_timestamp():
+    now = datetime.now().strftime('%B %d, %Y at %I:%M %p')
+    timestamp_label.config(text=f"Last update: {now}")
+
+# Initialize the Tkinter window
+root = tk.Tk()
+root.title("API Example")
+
+# API Response Display
+api_response_label = tk.Label(root, text="Fetching API data...", wraplength=400)
+api_response_label.pack(padx=10, pady=10)
+
+# Last Update Display
+timestamp_label = tk.Label(root, text="Last update: Loading...", wraplength=400)
+timestamp_label.pack(padx=10, pady=10)
+
+# Fetch data and update timestamp
+fetch_data()
+update_timestamp()
+root.after(1000, update_timestamp)  # Update timestamp every second
+
+# Start the Tkinter loop
+root.mainloop()
     </code></pre>
-    
-    <h2>Current Time</h2>
-    <p id="last-update">Current time: Loading...</p>
 
-    <script>
-        function updateLastUpdate() {
-            const lastUpdateElement = document.getElementById('last-update');
-            const now = new Date();
-            
-            // Define options for date and time formatting
-            const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-            
-            // Format the date and time
-            const formattedDate = now.toLocaleDateString('en-US', dateOptions);
-            const formattedTime = now.toLocaleTimeString('en-US', timeOptions);
-            
-            // Set the text content with formatted date and time
-            lastUpdateElement.textContent = `Current time: ${formattedDate} at ${formattedTime}`;
-        }
+    <h3>JavaScript:</h3>
+    <pre><code>
+async function fetchApiData() {
+    try {
+        const response = await fetch('https://fitsneezy.github.io/responseapisimple/api');
+        const data = await response.json();
+        document.getElementById('api-response').innerText = data.message;
+    } catch (error) {
+        document.getElementById('api-response').innerText = 'Error fetching data.';
+    }
+}
 
-        // Update the timestamp every second
-        setInterval(updateLastUpdate, 1000);
+function updateTimestamp() {
+    const now = new Date();
+    const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit', 
+        hour12: true 
+    };
+    const timestamp = now.toLocaleDateString('en-US', options);
+    document.getElementById('timestamp').innerText = `Last update: ${timestamp}`;
+}
 
-        // Initial call to set the timestamp immediately on page load
-        updateLastUpdate();
-    </script>
+fetchApiData();
+setInterval(updateTimestamp, 1000);
+    </code></pre>
+
+    <h3>C++:</h3>
+    <pre><code>
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;curl/curl.h&gt;
+#include &lt;ctime&gt;
+#include &lt;iomanip&gt;
+#include &lt;sstream&gt;
+
+size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
+    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    return size * nmemb;
+}
+
+std::string getCurrentTimestamp() {
+    auto now = std::time(nullptr);
+    std::tm* tm = std::localtime(&now);
+    std::ostringstream oss;
+    oss << std::put_time(tm, "%B %d, %Y at %I:%M %p");
+    return oss.str();
+}
+
+int main() {
+    CURL* curl;
+    CURLcode res;
+    std::string readBuffer;
+
+    curl_global_init(CURL_GLOBAL_DEFAULT);
+    curl = curl_easy_init();
+    if(curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, "https://fitsneezy.github.io/responseapisimple/api");
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        res = curl_easy_perform(curl);
+        if(res != CURLE_OK)
+            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+        else
+            std::cout &lt;&lt; "API Response: " &lt;&lt; readBuffer &lt;&lt; std::endl;
+
+        curl_easy_cleanup(curl);
+    }
+    curl_global_cleanup();
+
+    // Print the timestamp
+    std::cout &lt;&lt; "Last update: " &lt;&lt; getCurrentTimestamp() &lt;&lt; std::endl;
+
+    return 0;
+}
+    </code></pre>
 </body>
 </html>
