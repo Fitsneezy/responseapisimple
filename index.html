@@ -4,32 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        p {
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
     <p>This site is designed to only be used by APIs.</p>
     <p>You can reference it using:</p>
     <p><a href="https://fitsneezy.github.io/responseapisimple">https://fitsneezy.github.io/responseapisimple</a></p>
     <p>in your code.</p>
-    <p id="last-update">Last update: Loading...</p>
+    <p id="last-update">Current time: Loading...</p>
 
     <script>
         function updateLastUpdate() {
             const lastUpdateElement = document.getElementById('last-update');
-            const lastUpdateDate = new Date(document.lastModified);
+            const now = new Date();
             
             // Define options for date and time formatting
             const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
             const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
             
             // Format the date and time
-            const formattedDate = lastUpdateDate.toLocaleDateString('en-US', dateOptions);
-            const formattedTime = lastUpdateDate.toLocaleTimeString('en-US', timeOptions);
+            const formattedDate = now.toLocaleDateString('en-US', dateOptions);
+            const formattedTime = now.toLocaleTimeString('en-US', timeOptions);
             
             // Set the text content with formatted date and time
-            lastUpdateElement.textContent = `Last update: ${formattedDate} at ${formattedTime}`;
+            lastUpdateElement.textContent = `Current time: ${formattedDate} at ${formattedTime}`;
         }
 
-        // Call the function on page load
+        // Update the timestamp every second
+        setInterval(updateLastUpdate, 1000);
+
+        // Initial call to set the timestamp immediately on page load
         updateLastUpdate();
     </script>
 </body>
